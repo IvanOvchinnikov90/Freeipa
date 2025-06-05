@@ -1,0 +1,1 @@
+команда подключения IPA агент: sudo ipa-client-install   --domain=test.local   --server=ipa.test.local   --realm=TEST.LOCAL   --principal=admin   --password=12345678Qa!   --mkhomedir   --force-join   --unattended
