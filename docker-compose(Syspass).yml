@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: syspass-app
+    image: syspass/syspass:3.1.0  # Установите нужную версию
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - db
+    volumes:
+      - syspass-config:/var/www/html/sysPass/app/config
+      - syspass-backup:/var/www/html/sysPass/app/backup
+    environment:
+      - USE_SSL=yes
+      - DB_HOST=syspass-db
+      - DB_USER=syspass
+      - DB_PASS=syspass
+      - DB_NAME=syspass
+      - DB_PORT=3306
+      - LDAP_SERVER=ipa.test.local  # Добавьте LDAP-настройки при необходимости
+      - LDAP_PORT=389
+      - LDAP_BASE_DN=cn=users,cn=accounts,dc=test,dc=local
+      - LDAP_USER_ATTR=uid
+
+  db:
+    container_name: syspass-db
+    restart: always
+    image: mariadb:10.2
+    environment:
+      - MYSQL_ROOT_PASSWORD=syspass
+#      - MYSQL_DATABASE=syspass
+      - MYSQL_USER=syspass
+      - MYSQL_PASSWORD=syspass
+    expose:
+      - "3306"
+    volumes:
+      - syspass-db:/var/lib/mysql
+
+volumes:
+  syspass-config:
+  syspass-backup:
+  syspass-db:
